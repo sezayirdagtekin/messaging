@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sezayir.demo.config.RabbitMQConfig;
 import com.sezayir.demo.config.RabbitMqProperties;
+import com.sezayir.demo.model.Person;
 import com.sezayir.demo.service.MessageSender;
 
 @RestController
@@ -27,11 +28,11 @@ public class RabbitMQController {
 	private RabbitMqProperties properties;
 	
 	@PostMapping("/send/message")
-	public  ResponseEntity<String>  sendMessage(@RequestBody String message) {
+	public  ResponseEntity<String>  sendMessage(@RequestBody Person person) {
 		
-		messageSender.sendMessage(rabbitTemplate, properties.getExchange(), message, properties.getRoutingKey());
+		messageSender.sendMessage(rabbitTemplate, properties.getExchange(), person, properties.getRoutingKey());
 		
-		return new ResponseEntity<String>("Message sent:"+message, HttpStatus.OK);
+		return new ResponseEntity<String>("Message sent:"+person.toString(), HttpStatus.OK);
 		
 	}
 

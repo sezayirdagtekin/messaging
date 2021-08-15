@@ -7,6 +7,7 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,30 +16,24 @@ import org.springframework.messaging.handler.annotation.support.DefaultMessageHa
 
 @Configuration
 public class RabbitMQConfig {
-	@Value("${rabbitmq.exchange}")
-	private String exchange;
 
-	@Value("$rabbitmq.queue}")
-	private String queue;
-
-	@Value("${rabbitmq.routingKey}")
-	private String routingKey;
-	
+	@Autowired
+	private RabbitMqProperties properties;
 
 	@Bean
 	public TopicExchange getExchangeName() {
-		return new TopicExchange(exchange);
+		return new TopicExchange(properties.getExchange());
 	}
 
 	@Bean
 	public Queue getQueueName() {
-		return new Queue(queue);
+		return new Queue(properties.getQueue());
 	}
 
 	@Bean
 	public Binding declareBinding() {
 		return BindingBuilder.bind(getQueueName()).to(getExchangeName())
-				.with(routingKey);
+				.with(properties.getRoutingKey());
 	}
 
 	@Bean
@@ -66,16 +61,5 @@ public class RabbitMQConfig {
 		return factory;
 	}
 
-	public String getRoutingKey() {
-		return routingKey;
-	}
-
-	public String getQueue() {
-		return queue;
-	}
-
-	public String getExchange() {
-		return exchange;
-	}
 
 }

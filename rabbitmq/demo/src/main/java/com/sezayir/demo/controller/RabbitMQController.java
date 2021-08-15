@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sezayir.demo.config.RabbitMQConfig;
+import com.sezayir.demo.config.RabbitMqProperties;
 import com.sezayir.demo.service.MessageSender;
 
 @RestController
@@ -18,17 +19,17 @@ public class RabbitMQController {
 	
 	@Autowired
 	private MessageSender messageSender;
-	@Autowired
-	private RabbitMQConfig rabbitMQConfig;
-	
+
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
-
+	
+	@Autowired
+	private RabbitMqProperties properties;
 	
 	@PostMapping("/send/message")
 	public  ResponseEntity<String>  sendMessage(@RequestBody String message) {
 		
-		messageSender.sendMessage(rabbitTemplate, rabbitMQConfig.getExchange(), message, rabbitMQConfig.getRoutingKey());
+		messageSender.sendMessage(rabbitTemplate, properties.getExchange(), message, properties.getRoutingKey());
 		
 		return new ResponseEntity<String>("Message sent:"+message, HttpStatus.OK);
 		

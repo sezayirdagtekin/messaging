@@ -9,7 +9,7 @@ public class RabbitMqProperties {
 	@Value("${rabbitmq.exchange}")
 	private String exchange;
 
-	@Value("$rabbitmq.queue}")
+	@Value("${rabbitmq.queue}")
 	private String queue;
 
 	@Value("${rabbitmq.routingKey}")
